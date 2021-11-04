@@ -1,0 +1,31 @@
+Segue pequeno HOWTO para captura de pacotes SIP encapsulados em WSS (Websocket Seguro — WebRTC) utilizando o canivete suíço SNGREP atuando como servidor HEP (Homer Encapsulated Protocol).
+Requisitos:
+Asterisk: 13+
+Módulos: res_hep e res_hep_pjsip
+Sngrep
+Configuração do /etc/asterisk/hep.conf
+
+[general]
+enabled = yes
+capture_address = 192.168.50.206:9061
+capture_password = senha
+capture_id = 1234
+uuid_type = call-id
+
+
+
+
+o endereço ip configurado em capture_address deve ser o endereço da placa de rede do asterisk.
+Configuração do ~/.sngreprc (/root/.sngreprc)
+
+set eep.listen on
+set eep.listen.address 192.168.50.206
+set eep.listen.port 9061
+set eep.listen.pass senha
+set eep.listen.uuid on
+
+Inicialização dos módulos no asterisk:
+asterisk -rx "module load res_hep.so"
+asterisk -rx "module load res_hep_pjsip.so"
+o sngrep deverá ser inicializado através do comando abaixo:
+sngrep -d lo
